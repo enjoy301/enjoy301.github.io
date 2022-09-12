@@ -75,7 +75,7 @@ enabled = true
 ## Comments
 [comments]
 enabled = true
-provider = "disqus"
+provider = "utterances"
 
 [comments.disqusjs]
 shortname = ""
@@ -85,8 +85,8 @@ admin = ""
 adminLabel = ""
 
 [comments.utterances]
-repo = ""
-issueTerm = "pathname"
+repo = "enjoy301/enjoy301.github.io"
+issueTerm = "title"
 label = ""
 
 [comments.remark42]
