@@ -14,3 +14,11 @@ url = "https://github.com/enjoy301"
 
 [social.params]
 icon = "brand-github"
+
+[[social]]
+identifier = "email"
+name = "Email"
+url = "mailto:eunjong147@pusan.ac.kr"
+
+[social.params]
+icon = "mail"
