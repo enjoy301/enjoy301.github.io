@@ -21,4 +21,4 @@ name = "Email"
 url = "mailto:eunjong147@pusan.ac.kr"
 
 [social.params]
-icon = "mail"
+icon = "messages"
