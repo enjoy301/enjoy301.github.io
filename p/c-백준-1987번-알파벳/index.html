@@ -1,0 +1,140 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="백트래킹으로 DFS 최적화"><title>[C++] 백준 1987번 - 알파벳</title><link rel=canonical href=https://enjoy301.github.io/p/c-%EB%B0%B1%EC%A4%80-1987%EB%B2%88-%EC%95%8C%ED%8C%8C%EB%B2%B3/><link rel=stylesheet href=/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css><meta property="og:title" content="[C++] 백준 1987번 - 알파벳"><meta property="og:description" content="백트래킹으로 DFS 최적화"><meta property="og:url" content="https://enjoy301.github.io/p/c-%EB%B0%B1%EC%A4%80-1987%EB%B2%88-%EC%95%8C%ED%8C%8C%EB%B2%B3/"><meta property="og:site_name" content="Enjoy301's tech blog"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="BOJ"><meta property="article:tag" content="C++"><meta property="article:tag" content="DFS"><meta property="article:tag" content="백트래킹"><meta property="article:published_time" content="2022-09-14T13:04:00+09:00"><meta property="article:modified_time" content="2022-09-14T13:04:00+09:00"><meta name=twitter:title content="[C++] 백준 1987번 - 알파벳"><meta name=twitter:description content="백트래킹으로 DFS 최적화"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu204329288875da40a96b9ecfc8485e83_203595_300x0_resize_box_3.png width=300 height=299 class=site-logo loading=lazy alt=Avatar></a>
+<span class=emoji>😛</span></figure><div class=site-meta><h1 class=site-name><a href=/>Enjoy301's tech blog</a></h1><h2 class=site-description>22살에도 아직 성장중</h2></div></header><ol class=social-menu><li><a href=https://github.com/enjoy301 target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=mailto:eunjong147@pusan.ac.kr target=_blank title=HEmail rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg><span>Home</span></a></li><li><a href=/about/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg><span>About</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg><span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg><span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg><span>Links</span></a></li><div class=menu-bottom-section><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><span>Dark Mode</span></li></div></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EB%AC%B8%EC%A0%9C-%ED%92%80%EC%9D%B4/>알고리즘 문제 풀이</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/c-%EB%B0%B1%EC%A4%80-1987%EB%B2%88-%EC%95%8C%ED%8C%8C%EB%B2%B3/>[C++] 백준 1987번 - 알파벳</a></h2><h3 class=article-subtitle>백트래킹으로 DFS 최적화</h3></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>Sep 14, 2022</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>2 minute read</time></div></footer></div></header><section class=article-content><h1 id=문제-링크>문제 링크</h1><p><a class=link href=https://www.acmicpc.net/problem/1987 target=_blank rel=noopener>https://www.acmicpc.net/problem/1987</a></p><h1 id=문제-풀이>문제 풀이</h1><p><strong>지나왔던 알파벳</strong>을 기록해야되는데, BFS를 이용하면 구현하기 까다롭다. 그래서 <strong>DFS</strong>를 이용한다.</p><p>가로, 세로 최대 20 X 20으로 400칸을 탐색하면 DFS만으로는 <strong>시간초과</strong>가 난다. 그래서 <strong>백트래킹</strong>을 이용해야 한다.</p><p>recursive 함수의 인자로 지나왔던 알파벳을 기록하는 배열을 넘겨주려 했는데, <strong>비효율적으로 메모리</strong>가 많이 필요하기 때문에, 전역변수로 선언해준다 (visited 배열).</p><p><strong>Line 25~27</strong>이 이번 알고리즘의 핵심이다.
+25번째 줄에서 <strong>백트래킹</strong>을 위해 <strong>지나왔던 알파벳</strong>을 기록해주고, 26번째 줄에서 재귀함수를 호출한다.<br>재귀함수가 끝나면, 27번째 줄에서 <strong>지나왔던 알파벳</strong>을 기록해준 것을 <strong>취소</strong>한다.</p><h1 id=알고리즘-순서>알고리즘 순서</h1><ol><li>26개의 알파벳을 기록할 배열을 만든다.</li><li>(0, 0)부터 DFS 함수를 시작한다.</li><li>입력받은 배열의 범위를 벗어나지 않은 상하좌우를 검색한다.</li><li>이미 지나왔던 알파벳이라면 더이상 탐색하지 않는다.</li><li>지나왔던 알파벳이 아니라면, 알파벳을 기록하고, DFS 함수를 호출한다.</li><li>DFS 함수가 끝나면, 지나왔던 알파벳을 기록한 것을 취소한다.</li></ol><h1 id=소스-코드>소스 코드</h1><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;iostream&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;vector&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;array&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;string&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;map&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=k>using</span> <span class=k>namespace</span> <span class=n>std</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=n>max_count</span> <span class=o>=</span> <span class=mi>1</span><span class=p>,</span> <span class=n>R</span><span class=p>,</span> <span class=n>C</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>array</span><span class=o>&lt;</span><span class=n>array</span><span class=o>&lt;</span><span class=kt>char</span><span class=p>,</span> <span class=mi>20</span><span class=o>&gt;</span><span class=p>,</span> <span class=mi>20</span><span class=o>&gt;</span> <span class=n>arr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>vector</span><span class=o>&lt;</span><span class=n>pair</span><span class=o>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;&gt;</span> <span class=n>adders</span> <span class=o>=</span> <span class=p>{{</span><span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>},</span> <span class=p>{</span><span class=o>-</span><span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>},</span> <span class=p>{</span><span class=mi>0</span><span class=p>,</span> <span class=mi>1</span><span class=p>},</span> <span class=p>{</span><span class=mi>0</span><span class=p>,</span> <span class=o>-</span><span class=mi>1</span><span class=p>}};</span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=n>visited</span><span class=p>[</span><span class=mi>26</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>recursive</span><span class=p>(</span><span class=kt>int</span> <span class=n>depth</span><span class=p>,</span> <span class=kt>int</span> <span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=n>y</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span><span class=p>(</span><span class=n>max_count</span> <span class=o>&lt;</span> <span class=n>depth</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_count</span> <span class=o>=</span> <span class=n>depth</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span><span class=p>(</span><span class=n>pair</span><span class=o>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;</span> <span class=nl>p</span> <span class=p>:</span> <span class=n>adders</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>new_x</span> <span class=o>=</span> <span class=n>x</span><span class=o>+</span><span class=n>p</span><span class=p>.</span><span class=n>first</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>new_y</span> <span class=o>=</span> <span class=n>y</span><span class=o>+</span><span class=n>p</span><span class=p>.</span><span class=n>second</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=n>new_x</span> <span class=o>&gt;=</span> <span class=mi>0</span> <span class=o>&amp;&amp;</span> <span class=n>new_x</span> <span class=o>&lt;</span> <span class=n>R</span> <span class=o>&amp;&amp;</span> <span class=n>new_y</span> <span class=o>&gt;=</span> <span class=mi>0</span> <span class=o>&amp;&amp;</span> <span class=n>new_y</span> <span class=o>&lt;</span> <span class=n>C</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// 백트래킹
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=n>visited</span><span class=p>[</span><span class=n>arr</span><span class=p>[</span><span class=n>new_x</span><span class=p>][</span><span class=n>new_y</span><span class=p>]</span> <span class=o>-</span> <span class=sc>&#39;A&#39;</span><span class=p>]){</span>
+</span></span><span class=line><span class=cl>                <span class=n>visited</span><span class=p>[</span><span class=n>arr</span><span class=p>[</span><span class=n>new_x</span><span class=p>][</span><span class=n>new_y</span><span class=p>]</span> <span class=o>-</span> <span class=sc>&#39;A&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>recursive</span><span class=p>(</span><span class=n>depth</span><span class=o>+</span><span class=mi>1</span><span class=p>,</span> <span class=n>new_x</span><span class=p>,</span> <span class=n>new_y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>visited</span><span class=p>[</span><span class=n>arr</span><span class=p>[</span><span class=n>new_x</span><span class=p>][</span><span class=n>new_y</span><span class=p>]</span> <span class=o>-</span> <span class=sc>&#39;A&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=n>ios</span><span class=o>::</span><span class=n>sync_with_stdio</span><span class=p>(</span><span class=nb>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>cin</span><span class=p>.</span><span class=n>tie</span><span class=p>(</span><span class=nb>NULL</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>cout</span><span class=p>.</span><span class=n>tie</span><span class=p>(</span><span class=nb>NULL</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>R</span> <span class=o>&gt;&gt;</span> <span class=n>C</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span><span class=p>(</span><span class=kt>int</span> <span class=n>i</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span> <span class=n>i</span><span class=o>&lt;</span><span class=n>R</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span><span class=p>(</span><span class=kt>int</span> <span class=n>j</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span> <span class=n>j</span><span class=o>&lt;</span><span class=n>C</span><span class=p>;</span> <span class=n>j</span><span class=o>++</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>            <span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>arr</span><span class=p>[</span><span class=n>i</span><span class=p>][</span><span class=n>j</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>visited</span><span class=p>[</span><span class=n>arr</span><span class=p>[</span><span class=mi>0</span><span class=p>][</span><span class=mi>0</span><span class=p>]</span> <span class=o>-</span> <span class=sc>&#39;A&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>recursive</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>max_count</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=엣지-케이스>엣지 케이스</h1><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>10 10
+</span></span><span class=line><span class=cl>ABCDEFGHIJ
+</span></span><span class=line><span class=cl>KLMNOPQRST
+</span></span><span class=line><span class=cl>UVWXYZABCD
+</span></span><span class=line><span class=cl>EFGHIJKLMN
+</span></span><span class=line><span class=cl>OPQRSTUVWX
+</span></span><span class=line><span class=cl>YZABCDEFGH
+</span></span><span class=line><span class=cl>IJKLMNOPQR
+</span></span><span class=line><span class=cl>STUVWXYZAB
+</span></span><span class=line><span class=cl>CDEFGHIJKL
+</span></span><span class=line><span class=cl>MOPQRSTUVW
+</span></span></code></pre></td></tr></table></div></div><p>26이 출력되어야 한다.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/boj/>BOJ</a>
+<a href=/tags/c++/>C++</a>
+<a href=/tags/dfs/>DFS</a>
+<a href=/tags/%EB%B0%B1%ED%8A%B8%EB%9E%98%ED%82%B9/>백트래킹</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=https://utteranc.es/client.js repo=enjoy301/enjoy301.github.io issue-term=title crossorigin=anonymous async></script><style>.utterances{max-width:unset}</style><script>function setUtterancesTheme(e){let t=document.querySelector(".utterances iframe");t&&t.contentWindow.postMessage({type:"set-theme",theme:`github-${e}`},"https://utteranc.es")}addEventListener("message",e=>{if(e.origin!=="https://utteranc.es")return;setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener("onColorSchemeChange",e=>{setUtterancesTheme(e.detail)})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2023 Enjoy301's tech blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.16.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

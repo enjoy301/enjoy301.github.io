@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Enjoy301's tech blog</title><link>https://enjoy301.github.io/</link><description>Recent content on Enjoy301's tech blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Jan 2023 22:35:00 +0900</lastBuildDate><atom:link href="https://enjoy301.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>WebRTC 개념 정리</title><link>https://enjoy301.github.io/p/webrtc-%EA%B0%9C%EB%85%90-%EC%A0%95%EB%A6%AC/</link><pubDate>Wed, 04 Jan 2023 22:35:00 +0900</pubDate><guid>https://enjoy301.github.io/p/webrtc-%EA%B0%9C%EB%85%90-%EC%A0%95%EB%A6%AC/</guid><description>&lt;p>스마일게이트 윈터데브캠프에서 WebRTC를 이용한 화상회의플랫폼을 제작하면서 필요한 WebRTC 개념을 정리합니다.&lt;/p>
+&lt;h1 id="webrtc란">WebRTC란?&lt;/h1>
+&lt;hr>
+&lt;p>Web Real-Time Communication의 약자입니다.
+웹 어플리케이션이 ==별도의 소프트웨어 없이== 데이터를 브라우저끼리 주고 받을 수 있는 기술입니다.
+음성, 영상, 텍스트, 파일 등을 공유할 수 있습니다.&lt;/p>
+&lt;h1 id="네트워크-용어">네트워크 용어&lt;/h1>
+&lt;hr>
+&lt;p>통신 과정 이해에 필요한 네트워크 용어를 먼저 알아봅시다.&lt;/p>
+&lt;h2 id="nat">NAT&lt;/h2>
+&lt;p>Netwrok Address Translation의 약자입니다.
+라우터 등의 장비를 통해 다수의 private IP를 하나의 public IP로 변환하는 기술입니다.&lt;/p>
+&lt;p>private IP 를 외부에서 알수 없기 때문에 보안성이 높다는 ==장점==이 있습니다.
+private IP 를 외부에서 알수 없기 때문에 서버 입장에서 외부의 클라이언트에게 패킷을 전송할 방법이 없다는 ==단점==이 있습니다.
+&lt;img src="https://enjoy301.github.io/image.png"
+loading="lazy"
+alt="image"
+>&lt;/p>
+&lt;h2 id="nat-travelsal">NAT travelsal&lt;/h2>
+&lt;p>.&lt;/p>
+&lt;h2 id="stun">STUN&lt;/h2>
+&lt;p>Session Traversal Utilities for NAT의 약자입니다.
+public에 위치하고, 요청을 보낸 클라이언트의 public IP address와 port를 알려주는 역할을 합니다.&lt;/p>
+&lt;h2 id="turn">TURN&lt;/h2>
+&lt;p>Traversal Using Relays around NAT의 약자입니다.
+&lt;strong>네트워크 트래픽을 Relay 시켜주는 역할&lt;/strong>을 합니다.&lt;/p>
+&lt;p>클라이언트는 서버에 Relay Allocation Request을 전송합니다.
+TURN 서비스는 이 allocation에 대한 transport address를 예약하게 되는데, 바로 이 주소가 relay transport address가 됩니다.
+이때, 클라이언트는 relay candidate를 획득하며, 사용 중인 시그널링 시스템을 사용하여 통신 상대에게 이를 전송합니다.
+클라이언트들이 전송한 RTP 패킷을 relay합니다.&lt;/p>
+&lt;p>TURN 서버와 관련된 리소스는 매우 비싸기 때문에 대부분은 &lt;strong>인증&lt;/strong>이 필요합니다.
+TURN 서버에 트래픽이 몰리기 때문에 &lt;strong>마지막 수단&lt;/strong>으로 사용해야 합니다.&lt;/p>
+&lt;h2 id="ice">ICE&lt;/h2>
+&lt;p>Interactive Connectivity Establishment의 약자입니다.
+ICE는 미디어와 데이터를 교환할 때 적합한 ICE candidate를 동적으로 찾아내는 프로세스입니다.
+ICE candidate는 IP와 Port, 그리고 TCP/UDP 등의 프로토콜로 이뤄져 있는 transport address를 의미합니다.&lt;/p>
+&lt;p>ICE candidate는 3가지로 나뉩니다.&lt;/p>
+&lt;ul>
+&lt;li>local address : 클라이언트의 private IP&lt;/li>
+&lt;li>server reflexive address : NAT 장비가 매핑한 클라이언트의 public IP&lt;/li>
+&lt;li>relayed address : TURN 서버가 패킷 릴레이를 위해 할당한 relay transport address&lt;/li>
+&lt;/ul>
+&lt;p>ICE는 ICE candidate를 수집하고, 각 candidate에 패킷을 송수신해서 각 경로에서 품질이 우수한 것을 사용합니다.&lt;/p>
+&lt;h2 id="sdp">SDP&lt;/h2>
+&lt;p>.&lt;/p>
+&lt;h2 id="rtp">RTP&lt;/h2>
+&lt;p>Real-time Transport Protocol의 약자입니다.
+일반적으로 UDP로 동작합니다.
+IP 멀티캐스트를 통해 여러 수신자에 데이터를 전송할 수 있게 합니다.&lt;/p>
+&lt;h2 id="signaling">Signaling&lt;/h2>
+&lt;p>.&lt;/p>
+&lt;h1 id="peer-connection-process">Peer Connection Process&lt;/h1>
+&lt;hr>
+&lt;p>.&lt;/p>
+&lt;h1 id="architecture">Architecture&lt;/h1>
+&lt;hr>
+&lt;p>연&lt;/p>
+&lt;h2 id="mesh">Mesh&lt;/h2>
+&lt;p>.&lt;/p>
+&lt;h2 id="sfu">SFU&lt;/h2>
+&lt;p>.&lt;/p>
+&lt;h2 id="mcu">MCU&lt;/h2>
+&lt;p>.&lt;/p>
+&lt;h1 id="api">API&lt;/h1>
+&lt;hr>
+&lt;p>.&lt;/p>
+&lt;h1 id="question">Question&lt;/h1>
+&lt;hr>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">Q. 원래 이런거 필요없이도 서버에 요청 잘됐는데 WebRTC는 왜 STUN, TURN 같은 게 필요할까?
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">A. client가 연결을 init할 때는 요청한 패킷에서 public IP를 알 수 있으니까 필요 없습니다.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">서버가 연결을 init할 때는 필요합니다. 서버는 클라이언트의 IP를 모르기 때문에 STUN, TURN을 이용하여 클라이언트의 public IP를 알아내는 과정이 필요합니다.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>소마 13기 회고</title><link>https://enjoy301.github.io/p/%EC%86%8C%EB%A7%88-13%EA%B8%B0-%ED%9A%8C%EA%B3%A0/</link><pubDate>Sun, 18 Dec 2022 20:08:00 +0900</pubDate><guid>https://enjoy301.github.io/p/%EC%86%8C%EB%A7%88-13%EA%B8%B0-%ED%9A%8C%EA%B3%A0/</guid><description>&lt;p>2022년의 전부였던 소마가 끝이 나고, 있었던 많은 일과 생각들을 정리해본다.&lt;/p>
+&lt;h1 id="1월-서류-접수">1월 서류 접수&lt;/h1>
+&lt;p>이때 나는 학교 앞 작은 회사에서 인턴을 하고 있었다.
+소프트웨어 마에스트로가 뭔지 몰랐지만 100만원을 준다는 사실과 재미없는 학교를 잠시 떠날 수 있다는 사실, 그리고 서울에서 자취를 할 수 있다는 사실이 매력적이라 생각했다.
+하지만 경쟁률이 너무 높아서 이번은 포트폴리오를 정리할 겸 지원해보고, 다음에 제대로 준비해서 지원해야겠다고 생각했다.
+제출 당일 막바지에 어설픈 지원서를 제출했다.&lt;/p>
+&lt;p>다시보면 너무 어설픈 지원서였다.
+첫 번째로, 자기소개의 첫 문장이 &amp;ldquo;귀찮음을 코딩으로 해결하는 개발자입니다.&amp;rdquo; 였다. 이 문장을 보면 귀찮음이라는 단어가 눈에 띄여 부정적인 인상을 준다. 좋은 말만 적어도 모지란 자기소개서인데, 제일 큰 글자, 제일 첫 번째 단어로 &amp;ldquo;귀찮음&amp;quot;이 보이니 읽기 싫게 많드는 효과가 있다..&lt;/p>
+&lt;p>두 번째로, 자기소개서에 장래희망 부분에 &amp;ldquo;젊을 때 돈 많이 벌어서 오션뷰 아파트에서 뒹굴뒹굴 살고 싶습니다.&amp;rdquo; 라고 적었다. 내가 인사 담당자라면 이런 말을 적은 사람을 뽑지 않을 것이다. 근데 오히려 심층 면접 때 이 항목 덕에 차가웠던 면접장에서 다른 사람의 웃음을 터뜨렸다.&lt;/p>
+&lt;p>마지막으로, 2000자내외로 써야했던 항목들을 500자 내외로 적었다. 너무 귀찮았고 글 솜씨도 없었기 때문에. 다시 생각해보니 오히려 일관성이 있는 것 같기도 하네.
+&lt;strong>여튼 나처럼 지원서 쓰지 마시오.&lt;/strong>&lt;/p>
+&lt;p>그래도 유일하게 잘한 점은 결국 제출했다는 것이다.&lt;/p>
+&lt;p>엄청난 수의 경쟁률, 하위 99.3%의 글 솜씨, 쓸 게 없는 포트폴리오였지만 결국 제출했고, 그것이 나의 2022년을 바꿨다.&lt;/p>
+&lt;p>겁 먹지 말고 도전하자. 떨어지면 어때. 0%와 1%는 단 1%의 차이지만, 1%는 돌림판을 돌려볼 기회는 얻을 수 있으니까.&lt;/p>
+&lt;p>이 생각이 소마 과정을 통틀어 얻은 깨달음 중 넘버원이고, 나의 실패한 소마 전체 과정을 꿰뚫는 깨달음이다.&lt;/p>
+&lt;h1 id="3월-코딩-테스트와-면접">3월 코딩 테스트와 면접&lt;/h1>
+&lt;h2 id="코딩-테스트">코딩 테스트&lt;/h2>
+&lt;p>솔직히 코테는 너무 쉬웠다. 제한 시간이 100초라서 시간복잡도 100억으로 설계해도 통과할 수 있다. 알고리즘보다 중요한건 SQL, CSS, JS문제 인 것 같다.
+알고리즘은 단시간에 확 잘해지기 힘든데, SQL, CSS, JS는 그냥 한번 보고 가기만해도 맞출 수 있는 문제였기 때문이다.
+백준 기준 실버1 이하의 문제들이니 너무 걱정말길.&lt;/p>
+&lt;p>코테는 그냥 허수를 거르기 위함이 아니였을까? 점수도 안알려주고, 면접에서도 일절 언급하지 않았다.&lt;/p>
+&lt;p>그리고.. 연습 겸 도전했던 소마에 2차 코테까지 합격했다.
+마지막 심층 면접만 앞뒀는데, 면접을 볼 지 말지 고민이 되었다.
+서울을 혼자 가는 게 처음이였고, 비행기 값이 비쌌고, 내가 부산에서 제일 말 못하는 사람이기 때문이다.&lt;/p>
+&lt;h2 id="면접">면접&lt;/h2>
+&lt;p>무식하면 용감하다. 그래서 용감하게 도전했다. 면접이 진행되는 코엑스 건물이 너무 넓어 길을 잃을 뻔했다.&lt;/p>
+&lt;p>면접은 5대5로 진행되었다. 넓은 회의실과 면접관과의 먼 거리, 면접관들의 차가운 분위기 때문에 취조받는 느낌이 들었다.&lt;/p>
+&lt;p>면접은 제출한 포트폴리오 기반으로 엄청 자세하게 물어본다.
+난 포트폴리오에 수화 인식하는 머신러닝 프로젝트를 썼는데, 질문이 꼬리에 꼬리를 물며 나왔다.&lt;/p>
+&lt;p>머신러닝, 딥러닝, AI의 정의들을 물어봤고, 데이터는 어떻게 모았는 지, 어떻게 동작하는 지, 어떤 문제가 있었는 지, 어떻게 해결했는 지 등등.&lt;/p>
+&lt;p>이 부분은 나에게 긍정적으로 작용했던 게, 그 프로젝트에 상당한 애착이 있었고, 내 대학교 생활 2년의 거의 전부였기 때문이다.
+그래서 이야기하듯이 면접을 진행했던 것 같다. 비하인드 스토리를 얘기하며 다 웃고, 어떻게 더 발전시킬지 여쭤보기도 하며 면접장을 내 것으로 만들었다.&lt;/p>
+&lt;p>다른 면접자들을 보며 느낀건 너무 떨려서 그런지 말을 잘 못하는지, 면접관의 질문에 맞지 않는 답을 하는 사람이 너무 많았다.&lt;/p>
+&lt;p>그리고 최종합격했다. 합격하자마자 든 생각은 &amp;lsquo;이게 되네?&amp;lsquo;였다.
+약간 소마를 의심하기도 했다. 나를 합격시켜준다고? 보는 눈 되게 없네.&lt;/p>
+&lt;h1 id="5월-예비-과정">5월 예비 과정&lt;/h1>
+&lt;p>이때 내 자존감은 바닥을 쳤다. 대부분 나보다 3~4년 나이가 많았고, 너무 좋은 대학이였다.
+난 부산에서 내가 제일 코딩 잘하는 줄 알았는데, 난 그냥 말하는 감자였다.&lt;/p></description></item><item><title>[C++] 백준 1987번 - 알파벳</title><link>https://enjoy301.github.io/p/c-%EB%B0%B1%EC%A4%80-1987%EB%B2%88-%EC%95%8C%ED%8C%8C%EB%B2%B3/</link><pubDate>Wed, 14 Sep 2022 13:04:00 +0900</pubDate><guid>https://enjoy301.github.io/p/c-%EB%B0%B1%EC%A4%80-1987%EB%B2%88-%EC%95%8C%ED%8C%8C%EB%B2%B3/</guid><description>&lt;h1 id="문제-링크">문제 링크&lt;/h1>
+&lt;p>&lt;a class="link" href="https://www.acmicpc.net/problem/1987" target="_blank" rel="noopener"
+>https://www.acmicpc.net/problem/1987&lt;/a>&lt;/p>
+&lt;h1 id="문제-풀이">문제 풀이&lt;/h1>
+&lt;p>&lt;strong>지나왔던 알파벳&lt;/strong>을 기록해야되는데, BFS를 이용하면 구현하기 까다롭다. 그래서 &lt;strong>DFS&lt;/strong>를 이용한다.&lt;/p>
+&lt;p>가로, 세로 최대 20 X 20으로 400칸을 탐색하면 DFS만으로는 &lt;strong>시간초과&lt;/strong>가 난다. 그래서 &lt;strong>백트래킹&lt;/strong>을 이용해야 한다.&lt;/p>
+&lt;p>recursive 함수의 인자로 지나왔던 알파벳을 기록하는 배열을 넘겨주려 했는데, &lt;strong>비효율적으로 메모리&lt;/strong>가 많이 필요하기 때문에, 전역변수로 선언해준다 (visited 배열).&lt;/p>
+&lt;p>&lt;strong>Line 25~27&lt;/strong>이 이번 알고리즘의 핵심이다.
+25번째 줄에서 &lt;strong>백트래킹&lt;/strong>을 위해 &lt;strong>지나왔던 알파벳&lt;/strong>을 기록해주고, 26번째 줄에서 재귀함수를 호출한다.&lt;br>
+재귀함수가 끝나면, 27번째 줄에서 &lt;strong>지나왔던 알파벳&lt;/strong>을 기록해준 것을 &lt;strong>취소&lt;/strong>한다.&lt;/p>
+&lt;h1 id="알고리즘-순서">알고리즘 순서&lt;/h1>
+&lt;ol>
+&lt;li>26개의 알파벳을 기록할 배열을 만든다.&lt;/li>
+&lt;li>(0, 0)부터 DFS 함수를 시작한다.&lt;/li>
+&lt;li>입력받은 배열의 범위를 벗어나지 않은 상하좌우를 검색한다.&lt;/li>
+&lt;li>이미 지나왔던 알파벳이라면 더이상 탐색하지 않는다.&lt;/li>
+&lt;li>지나왔던 알파벳이 아니라면, 알파벳을 기록하고, DFS 함수를 호출한다.&lt;/li>
+&lt;li>DFS 함수가 끝나면, 지나왔던 알파벳을 기록한 것을 취소한다.&lt;/li>
+&lt;/ol>
+&lt;h1 id="소스-코드">소스 코드&lt;/h1>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;vector&amp;gt;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;array&amp;gt;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;string&amp;gt;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;map&amp;gt;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>&lt;span class="k">using&lt;/span> &lt;span class="k">namespace&lt;/span> &lt;span class="n">std&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">max_count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">R&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">C&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">array&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">char&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">20&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">20&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">vector&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">pair&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">adders&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{{&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">}};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">bool&lt;/span> &lt;span class="n">visited&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">26&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">void&lt;/span> &lt;span class="nf">recursive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">depth&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">max_count&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">depth&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">max_count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">depth&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">pair&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nl">p&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">adders&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">new_x&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">new_y&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">new_x&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">new_x&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">R&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">new_y&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">new_y&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">C&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 백트래킹
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">visited&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">new_x&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">new_y&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="sc">&amp;#39;A&amp;#39;&lt;/span>&lt;span class="p">]){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">visited&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">new_x&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">new_y&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="sc">&amp;#39;A&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">true&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">recursive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">depth&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">new_x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">new_y&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">visited&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">new_x&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">new_y&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="sc">&amp;#39;A&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">false&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ios&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">sync_with_stdio&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cin&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">tie&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">NULL&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cout&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">tie&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">NULL&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cin&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">R&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">C&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">j&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">j&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">j&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cin&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">visited&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="sc">&amp;#39;A&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">true&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">recursive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cout&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">max_count&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">endl&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="엣지-케이스">엣지 케이스&lt;/h1>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">10 10
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ABCDEFGHIJ
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">KLMNOPQRST
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">UVWXYZABCD
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">EFGHIJKLMN
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OPQRSTUVWX
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">YZABCDEFGH
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">IJKLMNOPQR
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">STUVWXYZAB
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CDEFGHIJKL
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">MOPQRSTUVW
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>26이 출력되어야 한다.&lt;/p></description></item><item><title>About</title><link>https://enjoy301.github.io/about/</link><pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate><guid>https://enjoy301.github.io/about/</guid><description>&lt;p>Hi, there! 👋
+🌱 I’m eunjong.&lt;/p></description></item><item><title>Archives</title><link>https://enjoy301.github.io/archives/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://enjoy301.github.io/archives/</guid><description/></item><item><title>Links</title><link>https://enjoy301.github.io/links/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://enjoy301.github.io/links/</guid><description>&lt;p>To use this feature, add &lt;code>links&lt;/code> section to frontmatter.&lt;/p>
+&lt;p>This page&amp;rsquo;s frontmatter:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">links&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">title&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">GitHub&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">GitHub is the world&amp;#39;s largest software development platform.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">website&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">title&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TypeScript&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">website&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://www.typescriptlang.org&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ts-logo-128.jpg&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>image&lt;/code> field accepts both local and external images.&lt;/p></description></item><item><title>Search</title><link>https://enjoy301.github.io/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://enjoy301.github.io/search/</guid><description/></item></channel></rss>
