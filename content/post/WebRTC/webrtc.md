@@ -1,3 +1,14 @@
+---
+title: "WebRTC 개념 정리"
+description: "부제 - 왜 P2P 연결은 어려울까?"
+date: 2023-01-04 22:35:00+0900
+categories:
+  - "WebRTC"
+tags:
+  - "WebRTC"
+  - "Network"
+---
+
 스마일게이트 윈터데브캠프에서 WebRTC를 이용한 화상회의플랫폼을 제작하면서 필요한 WebRTC 개념을 정리합니다.
 
 # WebRTC란?
